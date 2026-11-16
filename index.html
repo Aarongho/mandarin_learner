@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Mandarin">
 <meta name="theme-color" content="#6A040F">
 <title>Kata Harian Mandarin</title>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js"></script>
 <style>
   :root{
     --merah:#B3001B; --merah-tua:#6A040F; --emas:#FFD166; --krem:#FFF8EE;
@@ -123,6 +124,26 @@
   .chip.cocok{border-color:var(--hijau); background:#e9f7ef; color:var(--hijau); opacity:.65;}
   .chip.goyang{animation:goyang .3s;}
   @keyframes goyang{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* tulis hanzi (goresan) */
+  .overlay{position:fixed; inset:0; background:rgba(43,27,23,.55); display:flex;
+    align-items:center; justify-content:center; z-index:50; padding:18px;}
+  .ov-kartu{background:#fff; border-radius:20px; padding:18px; width:100%;
+    max-width:340px; position:relative; text-align:center;}
+  .ov-tutup{position:absolute; top:10px; right:10px; border:none; background:var(--krem);
+    color:var(--abu); width:32px; height:32px; border-radius:50%; font-size:15px; font-weight:700;}
+  .hw-box{width:240px; height:240px; margin:12px auto 6px; background:var(--krem);
+    border-radius:14px; display:flex; align-items:center; justify-content:center;
+    background-image:
+      linear-gradient(to right, transparent 49.5%, #ecdcc8 49.5%, #ecdcc8 50.5%, transparent 50.5%),
+      linear-gradient(to bottom, transparent 49.5%, #ecdcc8 49.5%, #ecdcc8 50.5%, transparent 50.5%);}
+  .char-pager{display:flex; gap:8px; justify-content:center; margin-top:8px;}
+  .char-pager button{border:2px solid #eee2d5; background:#fff; border-radius:10px;
+    font-size:20px; width:44px; height:44px;
+    font-family:"PingFang SC","Noto Sans SC",sans-serif;}
+  .char-pager button.aktif{border-color:var(--merah); color:var(--merah); font-weight:700;}
+  .ov-ctl{display:flex; gap:8px; margin-top:10px;}
+  .ov-ctl .tombol{margin-top:0; padding:11px; font-size:14px;}
 </style>
 </head>
 <body>
@@ -223,6 +244,7 @@ function tHari(){
       <div class="arti">${esc(w.arti)}</div>
       ${w.contoh ? `<div class="contoh">${esc(w.contoh)}<br><i>${esc(w.contoh_pinyin)}</i><br>${esc(w.contoh_arti)}</div>` : ""}
       <button class="tombol-audio" onclick="ucap('${esc(w.hanzi)}')">🔊 Dengar pelafalan</button>
+      <button class="tombol-audio" onclick="bukaTulis(${w.id})">✍️ Lihat urutan goresan</button>
       ${legendaNada}
     </div>
     <button class="tombol utama" onclick="pindah('belajar')">Mulai belajar hari ini →</button>`;
@@ -272,6 +294,7 @@ function gambarKartu(){
           <div class="pinyin">${warnaiPinyin(w.pinyin)}</div>
           <div class="arti" style="font-size:20px">${esc(w.arti)}</div>
           ${w.contoh ? `<div class="contoh">${esc(w.contoh)}<br>${esc(w.contoh_arti)}</div>` : ""}
+          <button class="tombol-audio" onclick="event.stopPropagation(); bukaTulis(${w.id})">✍️ Goresan</button>
         </div>
       </div>
     </div>
@@ -445,6 +468,7 @@ let nadaSesi = null, pySesi = null;
 function tPinyin(){
   if(nadaSesi) return gambarNadaSoal();
   if(pySesi) return gambarPySoal();
+  if(sesiTulis) return renderTulisGame();
   M().innerHTML = `
     <div class="kartu">
       <div class="label">4 Nada Mandarin</div>
@@ -462,7 +486,8 @@ function tPinyin(){
       ${legendaNada}
     </div>
     <button class="tombol utama" onclick="mulaiNada()">🎧 Game Tebak Nada</button>
-    <button class="tombol kedua" onclick="mulaiPy()">🔤 Game Tebak Pinyin</button>`;
+    <button class="tombol kedua" onclick="mulaiPy()">🔤 Game Tebak Pinyin</button>
+    <button class="tombol kedua" onclick="mulaiTulis()">✍️ Latihan Menulis Hanzi</button>`;
 }
 
 /* --- Tebak Nada: dengar 1 karakter, tebak nadanya --- */
@@ -569,6 +594,127 @@ function pyLanjut(){
         <div class="skor-besar">${b}/${t}</div>
       </div>
       <button class="tombol utama" onclick="mulaiPy()">Main lagi</button>
+      <button class="tombol kedua" onclick="pindah('pinyin')">← Kembali</button>`;
+  }
+}
+
+/* ---------- Tulis Hanzi (urutan goresan) ---------- */
+let hwWriter = null, tulis = null, sesiTulis = null;
+function adaHW(){ return typeof HanziWriter !== "undefined"; }
+function karakter(w){ return Array.from(w.hanzi).filter(c => /[㐀-鿿]/.test(c)); }
+
+function pasangWriter(idEl, ch, mode, cb){
+  const el = document.getElementById(idEl);
+  if(!el) return;
+  el.innerHTML = "";
+  const gagal = pesan => { el.innerHTML = `<div style="padding:16px; font-size:13px; color:var(--abu)">${pesan}</div>`; };
+  if(!adaHW()) return gagal("Library goresan gagal dimuat — cek koneksi internetmu, lalu muat ulang app.");
+  try{
+    hwWriter = HanziWriter.create(idEl, ch, {
+      width:240, height:240, padding:10,
+      strokeColor:"#6A040F", radicalColor:"#B3001B",
+      outlineColor:"#e2d2bd", drawingColor:"#B3001B", drawingWidth:14,
+      showOutline:true, strokeAnimationSpeed:1, delayBetweenStrokes:180,
+      onLoadCharDataError: () => gagal("Data goresan tidak bisa dimuat di sini — buka versi GitHub Pages ya.")
+    });
+    if(mode === "animasi"){
+      hwWriter.loopCharacterAnimation();
+      if(cb) cb("Perhatikan urutan goresannya 👀");
+    } else {
+      hwWriter.quiz({
+        onMistake: () => { if(sesiTulis) sesiTulis.salah++; if(cb) cb("Ups, coba goresan itu lagi ✏️"); },
+        onCorrectStroke: () => { if(cb) cb(""); },
+        onComplete: r => {
+          if(cb) cb("✅ Selesai! " + ((r && r.totalMistakes) || 0) + " kesalahan goresan");
+          if(sesiTulis) setTimeout(tulisGameLanjut, 900);
+        }
+      });
+      if(cb) cb("Tulis dengan jarimu — ikuti bayangan karakternya ✍️");
+    }
+  }catch(e){ gagal("Goresan tidak tersedia untuk karakter ini."); }
+}
+const pesanKe = idEl => p => { const el = document.getElementById(idEl); if(el) el.textContent = p; };
+
+/* overlay dari Hari Ini / flashcard */
+function bukaTulis(id){
+  const w = WORDS[id-1];
+  tulis = { w, chars: karakter(w), ci:0, mode:"animasi" };
+  if(!tulis.chars.length){ tulis = null; return; }
+  const ov = document.createElement("div");
+  ov.className = "overlay"; ov.id = "ov";
+  ov.addEventListener("click", e => { if(e.target === ov) tutupTulis(); });
+  document.body.appendChild(ov);
+  renderTulis();
+}
+function tutupTulis(){ const o = document.getElementById("ov"); if(o) o.remove(); hwWriter = null; tulis = null; }
+function gantiChar(i){ tulis.ci = i; renderTulis(); }
+function gantiMode(m){ tulis.mode = m; renderTulis(); }
+function renderTulis(){
+  const ov = document.getElementById("ov"); if(!ov || !tulis) return;
+  const w = tulis.w, c = tulis.chars[tulis.ci];
+  ov.innerHTML = `
+    <div class="ov-kartu">
+      <button class="ov-tutup" onclick="tutupTulis()">✕</button>
+      <div class="pinyin" style="font-size:18px">${warnaiPinyin(w.pinyin)}</div>
+      <div style="font-size:13px; color:var(--abu)">${esc(w.arti)}</div>
+      ${tulis.chars.length > 1 ? `<div class="char-pager">${tulis.chars.map((ch,i)=>
+        `<button class="${i===tulis.ci?'aktif':''}" onclick="gantiChar(${i})">${ch}</button>`).join("")}</div>` : ""}
+      <div class="hw-box" id="hw-box"></div>
+      <div id="hw-pesan" style="font-size:13px; color:var(--abu); min-height:18px;"></div>
+      <div class="ov-ctl">
+        <button class="tombol ${tulis.mode==='animasi'?'utama':'kedua'}" onclick="gantiMode('animasi')">▶️ Animasi</button>
+        <button class="tombol ${tulis.mode==='tulis'?'utama':'kedua'}" onclick="gantiMode('tulis')">✍️ Coba tulis</button>
+      </div>
+    </div>`;
+  ov.querySelector(".ov-kartu").addEventListener("click", e => e.stopPropagation());
+  pasangWriter("hw-box", c, tulis.mode, pesanKe("hw-pesan"));
+}
+
+/* game Latihan Menulis (5 kata dari yang sudah dipelajari) */
+function mulaiTulis(){
+  sesiTulis = { pool: poolBelajar(5), wi:0, ci:0, salah:0 };
+  renderTulisGame();
+}
+function renderTulisGame(){
+  if(!sesiTulis) return;
+  const w = sesiTulis.pool[sesiTulis.wi];
+  const chars = karakter(w);
+  if(!chars.length) return tulisGameLanjut();
+  const c = chars[sesiTulis.ci];
+  M().innerHTML = `
+    <div class="label" style="text-align:center">✍️ Latihan Menulis · Kata ${sesiTulis.wi+1} / ${sesiTulis.pool.length}</div>
+    <div class="kartu" style="text-align:center">
+      <div class="pinyin" style="font-size:18px">${warnaiPinyin(w.pinyin)}</div>
+      <div style="font-size:13px; color:var(--abu)">${esc(w.arti)}${chars.length>1?` · karakter ${sesiTulis.ci+1}/${chars.length}`:""}</div>
+      <div class="hw-box" id="hw-game"></div>
+      <div id="hw-pesan-g" style="font-size:13px; color:var(--abu); min-height:18px;"></div>
+      <div class="ov-ctl">
+        <button class="tombol kedua" onclick="intipAnimasi()">👀 Intip animasi</button>
+        <button class="tombol kedua" onclick="tulisGameLanjut()">Lewati →</button>
+      </div>
+    </div>
+    <button class="tombol kedua" onclick="sesiTulis=null; pindah('pinyin')">← Keluar latihan</button>`;
+  pasangWriter("hw-game", c, "tulis", pesanKe("hw-pesan-g"));
+}
+function intipAnimasi(){
+  if(!hwWriter || !sesiTulis) return;
+  pesanKe("hw-pesan-g")("Perhatikan, setelah ini giliranmu lagi 👀");
+  hwWriter.animateCharacter({ onComplete: () => setTimeout(()=>{ if(sesiTulis) renderTulisGame(); }, 500) });
+}
+function tulisGameLanjut(){
+  if(!sesiTulis) return;
+  const chars = karakter(sesiTulis.pool[sesiTulis.wi]);
+  if(sesiTulis.ci + 1 < chars.length){ sesiTulis.ci++; renderTulisGame(); }
+  else if(sesiTulis.wi + 1 < sesiTulis.pool.length){ sesiTulis.wi++; sesiTulis.ci = 0; renderTulisGame(); }
+  else {
+    const salah = sesiTulis.salah; sesiTulis = null; catatStreak();
+    M().innerHTML = `
+      <div class="kartu" style="text-align:center">
+        <div class="label">Latihan menulis selesai</div>
+        <div class="skor-besar">✍️ ${salah}</div>
+        <p style="font-weight:700">${salah===0?"TANPA kesalahan goresan — 书法家! 🏆":salah<=5?"Mantap, tanganmu mulai hafal! 💪":"Terus latihan — urutan goresan butuh pembiasaan 🐢"}</p>
+      </div>
+      <button class="tombol utama" onclick="mulaiTulis()">Latihan lagi</button>
       <button class="tombol kedua" onclick="pindah('pinyin')">← Kembali</button>`;
   }
 }
