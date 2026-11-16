@@ -9,7 +9,7 @@
 // 4. Long-press home screen → tambah widget Scriptable → pilih script ini
 //    (ukuran Small atau Medium dua-duanya didukung)
 
-const DATA_URL = "https://aarongho.github.io/mandarin/daily_words.json"; // <-- GANTI INI
+const DATA_URL = "https://aarongho.github.io/mandarin_learner/daily_words.json";
 
 // ---------- Ambil data (dengan cache offline) ----------
 const fm = FileManager.local();
