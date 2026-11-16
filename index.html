@@ -13,6 +13,7 @@
     --merah:#B3001B; --merah-tua:#6A040F; --emas:#FFD166; --krem:#FFF8EE;
     --teks:#2B1B17; --abu:#8a7f7b; --hijau:#2E9E5B; --salah:#D64545;
     --kartu:#ffffff; --radius:18px;
+    --nada1:#D64545; --nada2:#E8960F; --nada3:#2E9E5B; --nada4:#3B6FD6; --nada5:#9a8f8b;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; padding:0; background:var(--krem); color:var(--teks);
@@ -26,15 +27,15 @@
   header .streak{background:rgba(255,255,255,.15); border-radius:999px;
     padding:5px 12px; font-size:13px; font-weight:600;}
 
-  main{flex:1; overflow-y:auto; padding:16px 16px 90px;}
+  main{flex:1; overflow-y:auto; padding:16px 16px 92px;}
 
   nav{position:fixed; bottom:0; left:0; right:0; background:#fff;
     border-top:1px solid #eee2d5; display:flex;
     padding-bottom:env(safe-area-inset-bottom);}
-  nav button{flex:1; border:none; background:none; padding:10px 0 8px;
-    font-size:11px; color:var(--abu); display:flex; flex-direction:column;
+  nav button{flex:1; border:none; background:none; padding:9px 0 7px;
+    font-size:10px; color:var(--abu); display:flex; flex-direction:column;
     align-items:center; gap:3px; font-weight:600;}
-  nav button .ic{font-size:21px; line-height:1;}
+  nav button .ic{font-size:20px; line-height:1;}
   nav button.aktif{color:var(--merah);}
 
   .kartu{background:var(--kartu); border-radius:var(--radius);
@@ -44,12 +45,16 @@
 
   .hanzi-besar{font-size:64px; font-weight:700; text-align:center; margin:6px 0;
     font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;}
-  .pinyin{color:var(--merah); font-size:22px; text-align:center; font-weight:600;}
+  .pinyin{font-size:22px; text-align:center; font-weight:700;}
   .arti{font-size:17px; text-align:center; margin-top:6px; color:#4a3a35;}
   .contoh{margin-top:14px; background:var(--krem); border-radius:12px;
     padding:12px; font-size:14px; text-align:center; color:#5a4a44;}
   .lencana{display:inline-block; background:var(--emas); color:#5a3b00;
     border-radius:999px; font-size:12px; font-weight:700; padding:4px 10px;}
+  .t1{color:var(--nada1);} .t2{color:var(--nada2);} .t3{color:var(--nada3);}
+  .t4{color:var(--nada4);} .t5{color:var(--nada5);}
+  .legenda{display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    font-size:11px; font-weight:700; margin-top:10px;}
 
   .tombol{display:block; width:100%; border:none; border-radius:14px;
     padding:15px; font-size:16px; font-weight:700; margin-top:10px;}
@@ -59,8 +64,9 @@
   .tombol-audio{border:none; background:var(--krem); color:var(--merah);
     border-radius:999px; padding:8px 16px; font-size:14px; font-weight:700;
     display:block; margin:10px auto 0;}
+  .audio-besar{display:block; margin:10px auto; border:none; background:var(--merah);
+    color:#fff; width:84px; height:84px; border-radius:50%; font-size:36px;}
 
-  /* flashcard flip */
   .flip-wrap{perspective:1000px; height:300px; margin-bottom:12px;}
   .flip{position:relative; width:100%; height:100%;
     transform-style:preserve-3d; transition:transform .45s;}
@@ -73,14 +79,12 @@
   .petunjuk{color:var(--abu); font-size:13px; margin-top:12px;}
 
   .progress-bar{height:8px; background:#f0e4d6; border-radius:99px; overflow:hidden;}
-  .progress-bar>div{height:100%; background:var(--merah); border-radius:99px;
-    transition:width .3s;}
+  .progress-bar>div{height:100%; background:var(--merah); border-radius:99px; transition:width .3s;}
   .baris-progres{display:flex; align-items:center; gap:10px; margin:8px 0;}
   .baris-progres .nm{width:52px; font-size:13px; font-weight:700;}
   .baris-progres .angka{width:86px; text-align:right; font-size:12px; color:var(--abu);}
   .baris-progres .progress-bar{flex:1;}
 
-  /* kuis */
   .opsi{display:block; width:100%; text-align:left; border:2px solid #eee2d5;
     background:#fff; border-radius:14px; padding:14px; font-size:16px;
     margin-top:10px; font-weight:600; color:var(--teks);}
@@ -100,6 +104,25 @@
     display:flex; justify-content:space-between;}
   .pusat{text-align:center; color:var(--abu); padding:30px 10px; font-size:15px;}
   .skor-besar{font-size:52px; font-weight:800; text-align:center; color:var(--merah);}
+
+  /* nada cards */
+  .grid-nada{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .kartu-nada{border:none; background:#fff; border-radius:16px; padding:14px 8px;
+    box-shadow:0 2px 8px rgba(107,4,15,.08); text-align:center;}
+  .kartu-nada .kontur{font-size:26px; font-weight:800;}
+  .kartu-nada .h{font-size:34px; font-family:"PingFang SC","Noto Sans SC",sans-serif;}
+  .kartu-nada .p{font-size:16px; font-weight:700;}
+  .kartu-nada .a{font-size:12px; color:var(--abu);}
+
+  /* matching */
+  .grid-cocok{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .chip{border:2px solid #eee2d5; background:#fff; border-radius:14px; padding:13px 8px;
+    font-size:16px; font-weight:700; text-align:center; color:var(--teks); min-height:54px;}
+  .chip.hanzi{font-size:24px; font-family:"PingFang SC","Noto Sans SC",sans-serif;}
+  .chip.pilih{border-color:var(--merah); background:#fdf1f2;}
+  .chip.cocok{border-color:var(--hijau); background:#e9f7ef; color:var(--hijau); opacity:.65;}
+  .chip.goyang{animation:goyang .3s;}
+  @keyframes goyang{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 </style>
 </head>
 <body>
@@ -111,6 +134,7 @@
 <nav>
   <button id="nav-hari" onclick="pindah('hari')"><span class="ic">📅</span>Hari Ini</button>
   <button id="nav-belajar" onclick="pindah('belajar')"><span class="ic">🎴</span>Belajar</button>
+  <button id="nav-pinyin" onclick="pindah('pinyin')"><span class="ic">🀄</span>Pinyin</button>
   <button id="nav-review" onclick="pindah('review')"><span class="ic">🔁</span>Review</button>
   <button id="nav-progres" onclick="pindah('progres')"><span class="ic">📊</span>Progres</button>
 </nav>
@@ -120,7 +144,7 @@
 let DATA = null, WORDS = [];
 const UKURAN_BATCH = 10;
 
-/* ---------- penyimpanan (aman di semua konteks) ---------- */
+/* ---------- penyimpanan ---------- */
 const bawaan = { pointer:0, review:[], benarTotal:0, salahTotal:0,
   riwayatKuis:[], streak:0, terakhirBelajar:null };
 let S = { ...bawaan };
@@ -129,7 +153,6 @@ function muatState(){
     if(t) S = { ...bawaan, ...JSON.parse(t) }; }catch(e){}
 }
 function simpan(){ try{ localStorage.setItem("mandarin_v1", JSON.stringify(S)); }catch(e){} }
-
 function catatStreak(){
   const hariIni = new Date().toDateString();
   if(S.terakhirBelajar === hariIni) return;
@@ -139,14 +162,28 @@ function catatStreak(){
 }
 function gambarStreak(){ document.getElementById("streak").textContent = "🔥 " + (S.streak||0); }
 
-/* ---------- audio pelafalan ---------- */
-function ucap(teks){
+/* ---------- audio ---------- */
+function ucap(teks, lambat){
   try{
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(teks);
-    u.lang = "zh-CN"; u.rate = 0.85;
+    u.lang = "zh-CN"; u.rate = lambat ? 0.6 : 0.85;
     speechSynthesis.speak(u);
   }catch(e){}
+}
+
+/* ---------- pinyin & nada ---------- */
+const PETA_NADA = {
+  "āēīōūǖ":1, "áéíóúǘ":2, "ǎěǐǒǔǚ":3, "àèìòùǜ":4
+};
+function nadaSuku(suku){
+  for(const [huruf, n] of Object.entries(PETA_NADA))
+    for(const c of suku) if(huruf.includes(c)) return n;
+  return 5; // netral
+}
+function warnaiPinyin(pinyin){
+  return pinyin.split(" ").map(s =>
+    `<span class="t${nadaSuku(s)}">${esc(s)}</span>`).join(" ");
 }
 
 /* ---------- util ---------- */
@@ -158,14 +195,20 @@ function kataHariIni(){
   const idx = Math.max(0, Math.round((hr - mulai)/86400000));
   return { w: WORDS[idx % WORDS.length], hari: idx + 1 };
 }
+function poolBelajar(n){ // kata yang sudah/sedang dipelajari (untuk game)
+  const dasar = S.pointer > 10 ? WORDS.slice(0, S.pointer) : WORDS.slice(0, 30);
+  return acak(dasar).slice(0, n);
+}
+const legendaNada = `<div class="legenda">
+  <span class="t1">■ nada 1</span><span class="t2">■ nada 2</span>
+  <span class="t3">■ nada 3</span><span class="t4">■ nada 4</span>
+  <span class="t5">■ netral</span></div>`;
 
 /* ---------- navigasi ---------- */
-let tabAktif = "hari";
 function pindah(tab){
-  tabAktif = tab;
-  ["hari","belajar","review","progres"].forEach(t=>
+  ["hari","belajar","pinyin","review","progres"].forEach(t=>
     document.getElementById("nav-"+t).classList.toggle("aktif", t===tab));
-  ({hari:tHari, belajar:tBelajar, review:tReview, progres:tProgres})[tab]();
+  ({hari:tHari, belajar:tBelajar, pinyin:tPinyin, review:tReview, progres:tProgres})[tab]();
 }
 const M = () => document.getElementById("main");
 
@@ -176,15 +219,16 @@ function tHari(){
     <div class="kartu">
       <div style="text-align:center"><span class="lencana">📅 Hari ke-${hari} · HSK ${w.hsk}</span></div>
       <div class="hanzi-besar">${esc(w.hanzi)}</div>
-      <div class="pinyin">${esc(w.pinyin)}</div>
+      <div class="pinyin">${warnaiPinyin(w.pinyin)}</div>
       <div class="arti">${esc(w.arti)}</div>
       ${w.contoh ? `<div class="contoh">${esc(w.contoh)}<br><i>${esc(w.contoh_pinyin)}</i><br>${esc(w.contoh_arti)}</div>` : ""}
       <button class="tombol-audio" onclick="ucap('${esc(w.hanzi)}')">🔊 Dengar pelafalan</button>
+      ${legendaNada}
     </div>
     <button class="tombol utama" onclick="pindah('belajar')">Mulai belajar hari ini →</button>`;
 }
 
-/* ---------- TAB: Belajar (flashcard batch 10 → kuis) ---------- */
+/* ---------- TAB: Belajar ---------- */
 let sesi = null;
 function tBelajar(){
   if(sesi && ["kartu","kuis","hasil"].includes(sesi.mode)) return gambarSesi();
@@ -194,13 +238,14 @@ function tBelajar(){
     <div class="kartu">
       <div class="label">Sesi belajar</div>
       <p style="margin:4px 0 12px; font-size:15px;">Pelajari <b>${Math.min(UKURAN_BATCH,sisa)} kata baru</b> lewat flashcard,
-      lalu kerjakan <b>kuis pilihan ganda</b> untuk mengunci ingatan. Kata yang salah otomatis masuk Review.</p>
+      lalu <b>kuis campuran</b> (arti, pinyin, &amp; listening 🎧). Kata yang salah otomatis masuk Review.</p>
       <div class="progress-bar"><div style="width:${(S.pointer/WORDS.length*100).toFixed(1)}%"></div></div>
       <div style="font-size:12px; color:var(--abu); margin-top:6px;">${S.pointer} / ${WORDS.length} kata sudah dipelajari</div>
     </div>
     ${sisa>0
       ? `<button class="tombol utama" onclick="mulaiSesi()">🎴 Mulai ${Math.min(UKURAN_BATCH,sisa)} kata berikutnya</button>`
-      : `<div class="pusat">🎉 Semua ${WORDS.length} kata sudah dipelajari!</div>`}`;
+      : `<div class="pusat">🎉 Semua ${WORDS.length} kata sudah dipelajari!</div>`}
+    <button class="tombol kedua" onclick="mulaiCocok()">🧩 Game Cocokkan hanzi ↔ arti</button>`;
 }
 function mulaiSesi(){
   const batch = WORDS.slice(S.pointer, S.pointer + UKURAN_BATCH);
@@ -221,54 +266,71 @@ function gambarKartu(){
       <div class="flip ${sesi.terbalik?'terbalik':''}" id="flip">
         <div class="muka">
           <div class="hanzi-besar">${esc(w.hanzi)}</div>
-          <div class="petunjuk">ketuk untuk lihat arti</div>
+          <div class="petunjuk">ketuk untuk lihat arti 🔊</div>
         </div>
         <div class="muka belakang">
-          <div class="pinyin">${esc(w.pinyin)}</div>
+          <div class="pinyin">${warnaiPinyin(w.pinyin)}</div>
           <div class="arti" style="font-size:20px">${esc(w.arti)}</div>
           ${w.contoh ? `<div class="contoh">${esc(w.contoh)}<br>${esc(w.contoh_arti)}</div>` : ""}
         </div>
       </div>
     </div>
-    <button class="tombol-audio" onclick="event.stopPropagation(); ucap('${esc(w.hanzi)}')">🔊 Dengar</button>
+    <button class="tombol-audio" onclick="event.stopPropagation(); ucap('${esc(w.hanzi)}', true)">🐢 Dengar pelan</button>
     <button class="tombol utama" onclick="kartuLanjut()">${sesi.i+1 < sesi.batch.length ? "Lanjut →" : "Mulai kuis ✍️"}</button>`;
 }
-function balikKartu(){ sesi.terbalik = !sesi.terbalik; document.getElementById("flip").classList.toggle("terbalik", sesi.terbalik); }
+function balikKartu(){
+  sesi.terbalik = !sesi.terbalik;
+  document.getElementById("flip").classList.toggle("terbalik", sesi.terbalik);
+  if(sesi.terbalik) ucap(sesi.batch[sesi.i].hanzi); // auto audio saat dibalik
+}
 function kartuLanjut(){
   if(sesi.i + 1 < sesi.batch.length){ sesi.i++; sesi.terbalik = false; gambarKartu(); }
   else { sesi.mode = "kuis"; sesi.urutan = acak(sesi.batch); sesi.noSoal = 0; buatSoal(); gambarSoal(); }
 }
 
-/* ---------- kuis pilihan ganda ---------- */
+/* ---------- mesin kuis (4 tipe soal) ---------- */
 function buatSoal(kumpulan){
   const w = (kumpulan || sesi.urutan)[sesi.noSoal];
-  const keArti = Math.random() < 0.5;
-  const distraktor = [];
-  const sumber = WORDS.filter(x => x.id !== w.id && Math.abs(x.hsk - w.hsk) <= 1);
-  while(distraktor.length < 3 && sumber.length){
-    const k = sumber[Math.floor(Math.random()*sumber.length)];
-    if(!distraktor.includes(k)) distraktor.push(k);
+  const tipe = acak(["arti","hanzi","pinyin","dengar"])[0];
+  let distraktor = [];
+  const mirip = WORDS.filter(x => x.id !== w.id && Math.abs(x.hsk - w.hsk) <= 1);
+  while(distraktor.length < 3 && mirip.length){
+    const k = mirip[Math.floor(Math.random()*mirip.length)];
+    if(distraktor.includes(k)) continue;
+    if(tipe === "pinyin" && k.pinyin === w.pinyin) continue; // hindari pinyin kembar
+    distraktor.push(k);
   }
-  const opsi = acak([w, ...distraktor]);
-  sesi.soal = { w, keArti, opsi, terjawab:false };
+  sesi.soal = { w, tipe, opsi: acak([w, ...distraktor]), terjawab:false };
+}
+function isiOpsi(o, tipe){
+  if(tipe === "arti")   return esc(o.arti);
+  if(tipe === "pinyin") return warnaiPinyin(o.pinyin);
+  return `<span style="font-size:22px">${esc(o.hanzi)}</span>` +
+    (tipe === "hanzi" ? ` <span style="color:var(--abu);font-size:13px">${esc(o.pinyin)}</span>` : "");
+}
+function kepalaSoal(q){
+  if(q.tipe === "arti")   return `<div class="soal-hanzi">${esc(q.w.hanzi)}</div>
+    <div class="pinyin" style="font-size:16px">${warnaiPinyin(q.w.pinyin)}</div>
+    <p class="petunjuk" style="text-align:center">Apa artinya?</p>`;
+  if(q.tipe === "hanzi")  return `<div class="soal-teks">"${esc(q.w.arti)}"</div>
+    <p class="petunjuk" style="text-align:center">Yang mana hanzinya?</p>`;
+  if(q.tipe === "pinyin") return `<div class="soal-hanzi">${esc(q.w.hanzi)}</div>
+    <p class="petunjuk" style="text-align:center">Bagaimana cara bacanya?</p>`;
+  return `<button class="audio-besar" onclick="ucap('${esc(q.w.hanzi)}')">🔊</button>
+    <p class="petunjuk" style="text-align:center">🎧 Dengarkan, lalu pilih hanzi yang kamu dengar</p>`;
 }
 function gambarSoal(){
-  const q = sesi.soal, total = (sesi.urutan || sesi.batch).length;
+  const q = sesi.soal, total = sesi.urutan.length;
   M().innerHTML = `
     <div class="label" style="text-align:center">Kuis · Soal ${sesi.noSoal+1} / ${total}</div>
     <div class="kartu">
-      ${q.keArti
-        ? `<div class="soal-hanzi">${esc(q.w.hanzi)}</div><div class="pinyin" style="font-size:16px">${esc(q.w.pinyin)}</div>
-           <p style="text-align:center; color:var(--abu); font-size:14px; margin:8px 0 0;">Apa artinya?</p>`
-        : `<div class="soal-teks">"${esc(q.w.arti)}"</div>
-           <p style="text-align:center; color:var(--abu); font-size:14px; margin:8px 0 0;">Yang mana hanzinya?</p>`}
+      ${kepalaSoal(q)}
       <div id="opsi-wrap">
-        ${q.opsi.map((o,i)=>`<button class="opsi" id="op${i}" onclick="jawab(${i})">
-          ${q.keArti ? esc(o.arti) : `<span style="font-size:22px">${esc(o.hanzi)}</span> <span style="color:var(--abu);font-size:13px">${esc(o.pinyin)}</span>`}
-        </button>`).join("")}
+        ${q.opsi.map((o,i)=>`<button class="opsi" id="op${i}" onclick="jawab(${i})">${isiOpsi(o, q.tipe)}</button>`).join("")}
       </div>
       <button class="tombol utama" id="btn-next" style="display:none" onclick="soalLanjut()">Lanjut →</button>
     </div>`;
+  if(q.tipe === "dengar") ucap(q.w.hanzi); // auto play soal listening
 }
 function jawab(i){
   const q = sesi.soal;
@@ -283,7 +345,7 @@ function jawab(i){
   });
   if(benar){ sesi.benar++; S.benarTotal++; }
   else { sesi.salahKata.push(q.w.id); S.salahTotal++; }
-  ucap(q.w.hanzi);
+  if(q.tipe !== "dengar") ucap(q.w.hanzi);
   simpan();
   document.getElementById("btn-next").style.display = "block";
 }
@@ -291,7 +353,6 @@ function soalLanjut(){
   const total = sesi.urutan.length;
   if(sesi.noSoal + 1 < total){ sesi.noSoal++; buatSoal(); gambarSoal(); }
   else {
-    // sesi belajar selesai
     S.pointer += sesi.batch.length;
     sesi.salahKata.forEach(id => { if(!S.review.includes(id)) S.review.push(id); });
     S.riwayatKuis.unshift({ t: new Date().toISOString().slice(0,10), skor: sesi.benar, dari: total });
@@ -313,9 +374,209 @@ function gambarHasil(){
     ${sesi.salahKata.length ? `<button class="tombol kedua" onclick="sesi=null; pindah('review')">Review kata yang salah</button>` : ""}`;
 }
 
+/* ---------- Game Cocokkan ---------- */
+let coc = null;
+function mulaiCocok(){
+  const kata = poolBelajar(6);
+  coc = {
+    kiri: acak(kata.map(w => ({id:w.id, teks:w.hanzi}))),
+    kanan: acak(kata.map(w => ({id:w.id, teks:w.arti}))),
+    pilihKiri:null, pilihKanan:null, cocokSet:new Set(), langkah:0
+  };
+  gambarCocok();
+}
+function gambarCocok(){
+  M().innerHTML = `
+    <div class="label" style="text-align:center">🧩 Cocokkan hanzi dengan artinya</div>
+    <div class="grid-cocok">
+      <div>${coc.kiri.map((k,i)=>chipHtml(k,"L",i,true)).join("")}</div>
+      <div>${coc.kanan.map((k,i)=>chipHtml(k,"R",i,false)).join("")}</div>
+    </div>
+    <p style="text-align:center; color:var(--abu); font-size:13px; margin-top:12px;">Langkah: ${coc.langkah}</p>
+    <button class="tombol kedua" onclick="sesi=null; tBelajar()">← Kembali</button>`;
+}
+function chipHtml(k, sisi, i, hanzi){
+  const cocokKelas = coc.cocokSet.has(k.id) ? "cocok" : "";
+  const pilih = (sisi==="L" ? coc.pilihKiri : coc.pilihKanan) === i ? "pilih" : "";
+  return `<button class="chip ${hanzi?'hanzi':''} ${cocokKelas} ${pilih}" id="chip${sisi}${i}"
+    style="width:100%; margin-bottom:10px;" onclick="pilihChip('${sisi}',${i})"
+    ${cocokKelas?'disabled':''}>${esc(k.teks)}</button>`;
+}
+function pilihChip(sisi, i){
+  if(sisi === "L"){ coc.pilihKiri = (coc.pilihKiri === i ? null : i); if(coc.pilihKiri!==null) ucap(coc.kiri[i].teks); }
+  else coc.pilihKanan = (coc.pilihKanan === i ? null : i);
+  if(coc.pilihKiri !== null && coc.pilihKanan !== null){
+    coc.langkah++;
+    const L = coc.kiri[coc.pilihKiri], R = coc.kanan[coc.pilihKanan];
+    if(L.id === R.id){
+      coc.cocokSet.add(L.id);
+      coc.pilihKiri = coc.pilihKanan = null;
+      if(coc.cocokSet.size === coc.kiri.length){
+        catatStreak();
+        M().innerHTML = `
+          <div class="kartu" style="text-align:center">
+            <div class="label">Selesai!</div>
+            <div class="skor-besar">🧩 ${coc.langkah}</div>
+            <p style="font-weight:700;">Semua cocok dalam ${coc.langkah} langkah${coc.langkah===6?" — SEMPURNA! 🏆":"!"}</p>
+          </div>
+          <button class="tombol utama" onclick="mulaiCocok()">Main lagi</button>
+          <button class="tombol kedua" onclick="sesi=null; tBelajar()">← Kembali belajar</button>`;
+        return;
+      }
+      gambarCocok();
+    } else {
+      // salah -> goyang lalu reset pilihan
+      gambarCocok();
+      const a = document.getElementById("chipL"+coc.pilihKiri), b = document.getElementById("chipR"+coc.pilihKanan);
+      [a,b].forEach(el=>{ if(el){ el.classList.add("goyang","salah"); } });
+      setTimeout(()=>{ coc.pilihKiri = coc.pilihKanan = null; gambarCocok(); }, 450);
+    }
+  } else gambarCocok();
+}
+
+/* ---------- TAB: Pinyin & Nada ---------- */
+const CONTOH_NADA = [
+  {n:1, kontur:"ˉ  (datar tinggi)", hanzi:"妈", pinyin:"mā", arti:"ibu"},
+  {n:2, kontur:"ˊ  (naik)", hanzi:"麻", pinyin:"má", arti:"rami; kebas"},
+  {n:3, kontur:"ˇ  (turun-naik)", hanzi:"马", pinyin:"mǎ", arti:"kuda"},
+  {n:4, kontur:"ˋ  (turun tajam)", hanzi:"骂", pinyin:"mà", arti:"memarahi"},
+];
+let nadaSesi = null, pySesi = null;
+function tPinyin(){
+  if(nadaSesi) return gambarNadaSoal();
+  if(pySesi) return gambarPySoal();
+  M().innerHTML = `
+    <div class="kartu">
+      <div class="label">4 Nada Mandarin</div>
+      <p style="font-size:14px; margin:4px 0 12px;">Satu suku kata bisa punya arti berbeda tergantung nadanya. Klasiknya: <b>ma</b>. Ketuk kartu untuk dengar bedanya 👇</p>
+      <div class="grid-nada">
+        ${CONTOH_NADA.map(c=>`
+          <button class="kartu-nada" onclick="ucap('${c.hanzi}', true)">
+            <div class="kontur t${c.n}">${c.kontur}</div>
+            <div class="h">${c.hanzi}</div>
+            <div class="p t${c.n}">${c.pinyin}</div>
+            <div class="a">${c.arti}</div>
+          </button>`).join("")}
+      </div>
+      <p style="font-size:13px; color:var(--abu); margin:12px 0 0;">Plus <b class="t5">nada netral</b> — pendek dan ringan, seperti suku kedua di <b>xièxie</b>. Warna pinyin di seluruh app ini mengikuti nadanya:</p>
+      ${legendaNada}
+    </div>
+    <button class="tombol utama" onclick="mulaiNada()">🎧 Game Tebak Nada</button>
+    <button class="tombol kedua" onclick="mulaiPy()">🔤 Game Tebak Pinyin</button>`;
+}
+
+/* --- Tebak Nada: dengar 1 karakter, tebak nadanya --- */
+function poolNada(){
+  return WORDS.filter(w => Array.from(w.hanzi).length === 1 && nadaSuku(w.pinyin) <= 4);
+}
+function mulaiNada(){
+  nadaSesi = { pool: acak(poolNada()).slice(0, 10), no:0, benar:0, terjawab:false };
+  gambarNadaSoal();
+}
+function gambarNadaSoal(){
+  const w = nadaSesi.pool[nadaSesi.no];
+  M().innerHTML = `
+    <div class="label" style="text-align:center">🎧 Tebak Nada · ${nadaSesi.no+1} / ${nadaSesi.pool.length}</div>
+    <div class="kartu" style="text-align:center">
+      <button class="audio-besar" onclick="ucap('${esc(w.hanzi)}', true)">🔊</button>
+      <p class="petunjuk">Dengarkan baik-baik. Nada berapa ini?</p>
+      <div id="hasil-nada" style="min-height:64px; margin:8px 0;"></div>
+      ${[1,2,3,4].map(n=>`<button class="opsi" id="nada${n}" onclick="jawabNada(${n})" style="text-align:center">
+        <span class="t${n}" style="font-size:20px; font-weight:800">Nada ${n} ${["ˉ","ˊ","ˇ","ˋ"][n-1]}</span></button>`).join("")}
+      <button class="tombol utama" id="btn-nada" style="display:none" onclick="nadaLanjut()">Lanjut →</button>
+    </div>`;
+  nadaSesi.terjawab = false;
+  ucap(w.hanzi, true);
+}
+function jawabNada(n){
+  if(nadaSesi.terjawab) return;
+  nadaSesi.terjawab = true;
+  const w = nadaSesi.pool[nadaSesi.no];
+  const kunci = nadaSuku(w.pinyin);
+  document.getElementById("nada"+kunci).classList.add("benar");
+  if(n !== kunci) document.getElementById("nada"+n).classList.add("salah");
+  else nadaSesi.benar++;
+  for(let k=1;k<=4;k++) document.getElementById("nada"+k).disabled = true;
+  document.getElementById("hasil-nada").innerHTML =
+    `<div class="soal-hanzi" style="font-size:38px; margin:0">${esc(w.hanzi)}</div>
+     <div class="pinyin" style="font-size:18px">${warnaiPinyin(w.pinyin)}</div>
+     <div style="font-size:13px; color:var(--abu)">${esc(w.arti)}</div>`;
+  document.getElementById("btn-nada").style.display = "block";
+}
+function nadaLanjut(){
+  if(nadaSesi.no + 1 < nadaSesi.pool.length){ nadaSesi.no++; gambarNadaSoal(); }
+  else {
+    const b = nadaSesi.benar, t = nadaSesi.pool.length; nadaSesi = null; catatStreak();
+    M().innerHTML = `
+      <div class="kartu" style="text-align:center">
+        <div class="label">Hasil Tebak Nada</div>
+        <div class="skor-besar">${b}/${t}</div>
+        <p style="font-weight:700">${b>=8?"Telingamu tajam! 👂✨":b>=5?"Lumayan! Nada 2 vs 3 memang tricky 😄":"Coba lagi — dengarkan versi pelannya 🐢"}</p>
+      </div>
+      <button class="tombol utama" onclick="mulaiNada()">Main lagi</button>
+      <button class="tombol kedua" onclick="pindah('pinyin')">← Kembali</button>`;
+  }
+}
+
+/* --- Tebak Pinyin: lihat hanzi, pilih pinyin yang benar --- */
+function mulaiPy(){
+  pySesi = { pool: poolBelajar(10), no:0, benar:0, soal:null };
+  buatPySoal(); gambarPySoal();
+}
+function buatPySoal(){
+  const w = pySesi.pool[pySesi.no];
+  const distraktor = [];
+  const lain = WORDS.filter(x => x.id !== w.id && x.pinyin !== w.pinyin &&
+    Math.abs(x.pinyin.split(" ").length - w.pinyin.split(" ").length) === 0);
+  while(distraktor.length < 3 && lain.length){
+    const k = lain[Math.floor(Math.random()*lain.length)];
+    if(!distraktor.includes(k)) distraktor.push(k);
+  }
+  pySesi.soal = { w, opsi: acak([w, ...distraktor]), terjawab:false };
+}
+function gambarPySoal(){
+  const q = pySesi.soal;
+  M().innerHTML = `
+    <div class="label" style="text-align:center">🔤 Tebak Pinyin · ${pySesi.no+1} / ${pySesi.pool.length}</div>
+    <div class="kartu">
+      <div class="soal-hanzi">${esc(q.w.hanzi)}</div>
+      <p class="petunjuk" style="text-align:center">Bagaimana cara bacanya?</p>
+      ${q.opsi.map((o,i)=>`<button class="opsi" id="py${i}" onclick="jawabPy(${i})" style="text-align:center; font-size:19px">${warnaiPinyin(o.pinyin)}</button>`).join("")}
+      <button class="tombol utama" id="btn-py" style="display:none" onclick="pyLanjut()">Lanjut →</button>
+    </div>`;
+}
+function jawabPy(i){
+  const q = pySesi.soal;
+  if(q.terjawab) return;
+  q.terjawab = true;
+  q.opsi.forEach((o,j)=>{
+    const el = document.getElementById("py"+j);
+    if(o.id === q.w.id) el.classList.add("benar");
+    else if(j === i) el.classList.add("salah");
+    el.disabled = true;
+  });
+  if(q.opsi[i].id === q.w.id) pySesi.benar++;
+  ucap(q.w.hanzi);
+  document.getElementById("btn-py").style.display = "block";
+}
+function pyLanjut(){
+  if(pySesi.no + 1 < pySesi.pool.length){ pySesi.no++; buatPySoal(); gambarPySoal(); }
+  else {
+    const b = pySesi.benar, t = pySesi.pool.length; pySesi = null; catatStreak();
+    M().innerHTML = `
+      <div class="kartu" style="text-align:center">
+        <div class="label">Hasil Tebak Pinyin</div>
+        <div class="skor-besar">${b}/${t}</div>
+      </div>
+      <button class="tombol utama" onclick="mulaiPy()">Main lagi</button>
+      <button class="tombol kedua" onclick="pindah('pinyin')">← Kembali</button>`;
+  }
+}
+
 /* ---------- TAB: Review ---------- */
 function tReview(){
   if(sesi && sesi.mode === "kuisReview") return gambarSoalReview();
+  sesi = null;
   if(!S.review.length){
     M().innerHTML = `<div class="pusat">✨ Tidak ada kata untuk di-review.<br>Kata yang salah di kuis akan muncul di sini.</div>`;
     return;
@@ -338,7 +599,6 @@ function gambarSoalReview(){
 }
 function soalReviewLanjut(){
   const q = sesi.soal;
-  // jawaban benar -> kata keluar dari daftar review
   if(!sesi.salahKata.includes(q.w.id)){
     S.review = S.review.filter(id => id !== q.w.id);
   }
